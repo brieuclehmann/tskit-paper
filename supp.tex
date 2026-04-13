@@ -69,13 +69,12 @@ of SARS-CoV-2; and DendroPy~\citep{sukumaran2010dendropy}, a
 long-established general-purpose phylogenetic scripting library.
 For each operation we mark whether the comparison library offers a
 fully comparable feature (\checkmark), a partial or restricted
-analogue ($\circ$), or none (blank). The list is illustrative
-rather than exhaustive and reflects library state at the time of
-writing.
+analogue ($\circ$), or none (blank). Marks reflect library state
+at the time of writing.
 
 Tskit is the result of more than a decade of sustained development,
-and the algorithmic advances underlying it have been described and
-benchmarked in a series of publications. The succinct tree
+and its distinctive operations have been introduced in a
+series of publications. The succinct tree
 sequence data format and the sequential tree-construction algorithm
 were first introduced as part of the msprime coalescent
 simulator~\citep{kelleher2016efficient}.
@@ -97,56 +96,52 @@ which the tskit library itself appeared as a distinct component.
 That paper gave a rigorous time- and space-complexity analysis of
 the ``simplify'' operation, which restricts an ARG to the
 history ancestral to a specified set of samples. ARG simplification
-is a fundamental operation with many applications~\cite{wong2024general},
+is a fundamental operation with many applications~\citep{wong2024general},
 as  well as being the primitive operation making forwards-time simulation of ARGs
 tractable~\citep{haller2018tree}.
 
-The same representation subsequently enabled a second wave of
-benchmarks in downstream analysis. \citet{kelleher2019inferring}
-introduced tsinfer, the first ARG inference method to scale to
-hundreds of thousands of samples, together with the genealogical
-nearest neighbours (GNN) statistic, which summarises local ancestry
-directly from the ARG rather than from genotypes.
-\citet{ralph2020efficiently} then developed a general API for
-population-genetic statistics built around a duality between
-site-based and branch-based statistics on ARGs, supported by a
-rigorous theoretical analysis. Benchmarks against existing
-genotype-matrix implementations showed speedups of up to five
-orders of magnitude at a fraction of the memory footprint; this is
-the result summarised in the main paper as order-of-magnitude gains
-for single-site statistics. Individual and pedigree abstractions
-were added to the data model in the course of the work of
-\citet{andersontrocme2023genes}, whose whole-autosome simulation of
-nearly 1.5 million Quebec founders is cited in the main paper as a
-demonstration of forwards-time scalability. Around the same time,
-\citet{tsambos2023link} contributed the \texttt{link\_ancestors}
-operation for efficient local-ancestry tracking in tree sequences,
-with benchmarks showing it keeps pace with the simulations that
-produce its inputs.
+Following this foundational work, tskit
+accumulated a sequence of new operations, each first described in its own
+publication. Motivated by needing to summarise biobank-scale inferred ARGs
+with uncalibrated node times, \citet{kelleher2019inferring} introduced the
+the genealogical nearest neighbours (GNN) statistic.
+\citet{ralph2020efficiently} then introduced a general API for
+population-genetic statistics built around a duality theorem
+relating site-based and branch-based statistics.
+The benchmarks in that paper show
+speedups of up to five orders of magnitude against
+genotype-matrix implementations at a fraction of the memory footprint.
+Individual and pedigree abstractions were added to the tskit data
+model by \citet{andersontrocme2023genes}, extending what a node or
+individual in an ARG can represent.
+\citet{tsambos2023link} introduced the ``link\_ancestors"
+operation, a new primitive for extracting local-ancestry tracts
+from an ARG.
 
-Most recently, the exposure of core tree-traversal primitives to
-Numba~\citep{lam2015numba} has allowed Python-level user code to
-JIT-compile ARG traversals at close to C speed. Two examples of
-this pattern in published tools are tstrait, a quantitative-trait
-simulator that walks the marginal trees to drop effects on
-edges~\citep{tagami2024tstrait}, and tsbrowse, an interactive ARG
-browser that computes quality-control statistics on the
-fly~\citep{karthikeyan2025tsbrowse}. At the algorithmic level,
-\citet{fritze2026forest} revisit the succinct tree sequence as an
-encoding of haplotypes rather than trees, and show that several
-operations that had historically been expressed tree-by-tree can be
-computed more directly from the edge table. \citet{lehmann2026on}
-develop the theory for computing genetic relatedness matrices
-(GRMs) directly from ARGs, and \citet{lee2026genetic} use this
-machinery for ARG-powered linear algebra in genomic prediction;
-the latter reports a head-to-head benchmark of the tskit-based GRM
-against ARGneedle-lib on the same inputs, which is the closest
-recent analogue to the direct feature comparison that Table S2
-cannot provide. The common thread across all of these results is
-that each advance compounds on the same underlying representation,
-so improvements at the core of tskit propagate automatically to
-every downstream tool built on top of it (Table S1, Figure 1 of the
-main paper).
+A further class of operation became possible once the core
+traversal orders were exposed to Numba~\citep{lam2015numba},
+allowing Python-level user code to JIT-compile ARG traversals at
+close to C speed. Building on this, \citet{tagami2024tstrait}
+introduced edge-wise effect-size dropping as a primitive for
+quantitative-trait simulation on ARGs, and
+\citet{karthikeyan2025tsbrowse} introduced on-the-fly
+quality-control and summary operations for interactive inspection
+of large tree sequences. \citet{fritze2026forest} introduced a
+class of haplotype-level queries that operate directly on the edge
+table rather than tree by tree, and \citet{lehmann2026on}
+introduced the operation of computing genetic relatedness matrices
+(GRMs) directly from an ARG. \citet{lee2026genetic} apply this
+last operation to genomic prediction and provide the one recent
+head-to-head benchmark of tskit against another library,
+comparing the ARG-based GRM with the corresponding implementation
+in ARGneedle-lib. Tskit~1.0 is the point at which this
+decade-long accumulation of operations is brought together and
+stabilised under a single, guaranteed API. The many blank cells
+in Table S2 are not an artefact of a narrow choice of comparison
+libraries: most of the operations listed above were defined by the
+publications that introduced them and simply have no analogue
+elsewhere, which is also why a direct head-to-head benchmark suite
+against a competing library is not possible.
 
 \input{functionality_table.tex}
 
