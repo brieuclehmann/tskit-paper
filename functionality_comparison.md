@@ -4,7 +4,7 @@ This document is the long-form companion to Table S2 in the paper
 (`functionality_table.tex`). For every operation listed in the table,
 it records the cell assignment (✓ full, ◐ partial, blank none) for each
 of the three comparison libraries — ARGneedle-lib, matUtils (BTE), and
-DendroPy — together justification/references. The
+DendroPy — together with justification/references. The
 comparisons are illustrative, not exhaustive: the goal is to defend
 the markers in Table S2 with concrete pointers a reader can verify.
 
