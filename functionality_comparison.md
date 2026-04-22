@@ -89,16 +89,15 @@ BTE, since matUtils itself is CLI-only.)
 
 ## Low-level API availability
 
-Two of the comparison libraries expose a lower-level C++ core that
-could in principle be reused directly. Whether external users can
-actually do so depends on what the upstream documentation endorses.
+The cell assignments above score each library's Python API. A separate
+question is whether a library also exposes a *documented C or C++
+library* that external code can link against directly.
 
-- **ARGneedle-lib (`arg_needle_lib_pybind`).** The pybind11 module is
-  enumerated in `argneedlelib_modules.html` (the ReadTheDocs API
-  reference) with class and function signatures, so the lower-level
-  surface is nominally accessible. The manual itself, however,
-  explicitly steers users away from direct use. From
-  `argneedle_manual.html`:
+- **arg-needle-lib.** The ReadTheDocs site is titled "arg-needle-lib
+  Python API Reference" (`argneedlelib_readthedocs.html`) and its
+  toctree contains only Python module pages; there is no C++ API
+  reference or header-file documentation.
+  The manual notes that C++ code exists but does not document it:
 
   > "For more advanced users, `arg-needle-lib` contains lower-level
   > C++ functions that can be used by including `arg-needle-lib` as
@@ -108,25 +107,18 @@ actually do so depends on what the upstream documentation endorses.
   > Python API and would like to discuss options for having it
   > implemented."
 
-  We therefore treat the pybind layer as an implementation detail
-  rather than an external API.
+- **matUtils / UShER.** The matUtils documentation (`matutils.rst`,
+  `matutils.html`) documents CLI subcommands only. The C++ code is
+  compiled into the `matUtils` and `usher` binaries; no library-level
+  API is documented for external C/C++ consumers.
 
-- **matUtils / MAT C++ library.** matUtils is distributed as a CLI
-  and its documentation does not describe a Python or C++ library
-  API of its own. External Python access to the underlying MAT
-  library is provided by a separate project, BTE, which is the
-  cell we score for matUtils. From `bte_index.rst`:
+- **BTE.** BTE is itself a Python extension, not a standalone C++
+  library. From `bte_index.rst`:
 
-  > "BTE (Big Tree Explorer) is a Python extension for analysis
-  > and traversal of extremely large phylogenetic trees. It's
-  > based on the Mutation Annotated Tree (MAT) library which
-  > underlies UShER and matUtils. […] BTE streamlines this process
-  > by exposing the heavily optimized MAT library underlying UShER
-  > and matUtils to Python."
-
-  In practice this means the MAT C++ core is reachable from
-  Python only through BTE; matUtils has no documented library-
-  level entry point of its own.
+  > "BTE (Big Tree Explorer) is a Python extension for analysis and
+  > traversal of extremely large phylogenetic trees. […] BTE
+  > streamlines this process by exposing the heavily optimized MAT
+  > library underlying UShER and matUtils to Python."
 
 ---
 
