@@ -266,6 +266,17 @@ The mutations/genotypes are covered by the next topics.
 - **DendroPy (blank):** the `Tree`/`Node`/`Edge` graph is a pure
   Python object hierarchy.
 
+### Flexible (more than binary) allelic state
+
+- **tskit (✓):** ancestral and derived states can be arbitrary strings.
+
+- **ARGneedle-lib (blank):** There is no notion of allelic state;
+  only "lack of mutation" or "mutation".
+
+- **matUtils/BTE (blank):** Allows arbitrary data associated with mutations.
+
+- **DendroPy (blank):** Sophisticated models of character states.
+
 ---
 
 ## 2. File formats
